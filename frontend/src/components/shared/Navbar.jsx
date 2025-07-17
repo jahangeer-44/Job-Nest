@@ -2,8 +2,8 @@ import React from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
 import { Avatar, AvatarImage } from "../ui/avatar";
-import { LogOut, Pointer, User2 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { LogOut, User2 } from "lucide-react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { USER_API_END_POINT } from "@/utils/constant";
@@ -14,6 +14,9 @@ const Navbar = () => {
   const { user } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const isActive = (path) => location.pathname === path;
 
   const logoutHandler = async () => {
     try {
@@ -27,9 +30,10 @@ const Navbar = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Logout failed");
     }
   };
+
   return (
     <div className="bg-[#6A38C2] shadow-md sticky top-0 z-50">
       <div className="flex items-center justify-between mx-auto max-w-7xl h-16">
@@ -44,12 +48,26 @@ const Navbar = () => {
             {user && user.role === "recruiter" ? (
               <>
                 <li>
-                  <Link to="/admin/companies" className="text-white">
+                  <Link
+                    to="/admin/companies"
+                    className={`transition duration-200 ${
+                      isActive("/admin/companies")
+                        ? "text-yellow-400 font-semibold"
+                        : "text-white"
+                    }`}
+                  >
                     Companies
                   </Link>
                 </li>
                 <li>
-                  <Link to="/admin/jobs" className="text-white">
+                  <Link
+                    to="/admin/jobs"
+                    className={`transition duration-200 ${
+                      isActive("/admin/jobs")
+                        ? "text-yellow-400 font-semibold"
+                        : "text-white"
+                    }`}
+                  >
                     Jobs
                   </Link>
                 </li>
@@ -57,17 +75,38 @@ const Navbar = () => {
             ) : (
               <>
                 <li>
-                  <Link to="/" className="text-white">
+                  <Link
+                    to="/"
+                    className={`transition duration-200 ${
+                      isActive("/")
+                        ? "text-yellow-400 font-semibold"
+                        : "text-white"
+                    }`}
+                  >
                     Home
                   </Link>
                 </li>
                 <li>
-                  <Link to="/jobs" className="text-white">
+                  <Link
+                    to="/jobs"
+                    className={`transition duration-200 ${
+                      isActive("/jobs")
+                        ? "text-yellow-400 font-semibold"
+                        : "text-white"
+                    }`}
+                  >
                     Jobs
                   </Link>
                 </li>
                 <li>
-                  <Link to="/browse" className="text-white">
+                  <Link
+                    to="/browse"
+                    className={`transition duration-200 ${
+                      isActive("/browse")
+                        ? "text-yellow-400 font-semibold"
+                        : "text-white"
+                    }`}
+                  >
                     Browse
                   </Link>
                 </li>
@@ -76,7 +115,6 @@ const Navbar = () => {
           </ul>
           {!user ? (
             <div className="flex items-center gap-2">
-              {/* Login Button - Secondary */}
               <Link to="/login">
                 <Button
                   className="border border-white text-black hover:bg-white hover:text-[#6A38C2] transition duration-200 cursor-pointer"
@@ -85,8 +123,6 @@ const Navbar = () => {
                   Login
                 </Button>
               </Link>
-
-              {/* Signup Button - Primary */}
               <Link to="/signup">
                 <Button className="bg-[#F8C102] text-black hover:bg-[#e6b400] transition duration-200 cursor-pointer">
                   Signup
@@ -106,8 +142,8 @@ const Navbar = () => {
                   />
                 </Avatar>
               </PopoverTrigger>
-              <PopoverContent className="w-80 bg-[#6A38C2] ">
-                <div className="bg-[#6A38C2] ">
+              <PopoverContent className="w-80 bg-[#6A38C2]">
+                <div className="bg-[#6A38C2]">
                   <div className="flex gap-2 space-y-2">
                     <Avatar className="cursor-pointer">
                       <AvatarImage
@@ -122,7 +158,7 @@ const Navbar = () => {
                       <h4 className="font-medium text-white">
                         {user?.fullname}
                       </h4>
-                      <p className="text-sm  text-[#F8C102]">
+                      <p className="text-sm text-[#F8C102]">
                         {user?.profile?.bio}
                       </p>
                     </div>
@@ -138,7 +174,6 @@ const Navbar = () => {
                         </div>
                       </Link>
                     )}
-
                     <div
                       onClick={logoutHandler}
                       className="flex items-center gap-2 px-3 py-2 rounded-md bg-gray-100 hover:bg-red-100 text-gray-800 transition cursor-pointer w-fit"
