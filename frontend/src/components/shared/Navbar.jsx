@@ -44,7 +44,7 @@ const Navbar = () => {
             {user && user.role === "recruiter" ? (
               <>
                 <li>
-                  <Link to="/admin/companies " className="text-white">
+                  <Link to="/admin/companies" className="text-white">
                     Companies
                   </Link>
                 </li>
